@@ -1,11 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { LogsController } from './logs/logs.controller';
-import { LogsResolver } from './logs/logs.resolver';
-import { LogsService } from './logs/logs.service';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 @Module({
   exports: [firebaseConfig],

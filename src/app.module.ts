@@ -1,14 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import Joi from 'joi';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { LogsModule } from './logs/logs.module';
 import { GameModule } from './game/game.module';
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 
 @Module({
   imports: [
@@ -35,7 +31,7 @@ import { getFirestore } from "firebase/firestore";
     LogsModule,
     GameModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [],
 
 })
