@@ -17,7 +17,7 @@ import { GameModule } from './game/game.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : 'env.pro',
-      ignoreEnvFile: process.env.NODE_ENV !== 'dev',
+      // ignoreEnvFile: process.env.NODE_ENV !== 'dev',
       // validationSchema: Joi.object({
       //   NODE_ENV: Joi.string().valid('dev', 'prod').required(),
       //   fb_apiKey: Joi.string().required(),
