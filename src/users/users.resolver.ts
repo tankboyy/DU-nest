@@ -11,6 +11,7 @@ export class UsersResolver {
   @Query(() => [userDto])
   async getAllUsers() {
     return this.usersService.getAllUsers();
+
   }
 
   @Query(() => [userDto])
