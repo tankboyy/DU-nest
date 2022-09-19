@@ -6,7 +6,7 @@ import { LogsModule } from "../logs/logs.module";
 import { UsersModule } from "../users/users.module";
 
 @Module({
-  imports: [firebaseConfig, LogsModule, UsersModule],
+  imports: [firebaseConfig, UsersModule, LogsModule],
   controllers: [],
   providers: [GameService, GameResolver]
 })

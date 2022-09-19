@@ -33,6 +33,5 @@ import { GameModule } from './game/game.module';
   ],
   controllers: [],
   providers: [],
-
 })
 export class AppModule {}
