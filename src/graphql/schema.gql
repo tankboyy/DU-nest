@@ -1,0 +1,112 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type userDto {
+  created: String
+  userGender: String
+  userId: String
+  userBirthDay: String
+  userName: String
+  userPw: String
+  userSchool: String
+  friends: [String!]
+  userNumber: String
+  id: Int
+  deletedTime: String
+}
+
+type logDto {
+  userName: String!
+  gameName: String!
+  userId: String!
+  userGender: String!
+  currentTime: String!
+}
+
+type logDto2 {
+  allLogs: logDto!
+  todayLog: logDto!
+}
+
+type gamesDto {
+  id: String!
+  users: [gameDto!]!
+}
+
+type gameDto {
+  userId: String!
+  startTime: String!
+}
+
+type Query {
+  getAllUsers: [userDto!]!
+  getUser(userId: String!): [userDto!]!
+  idCheck(userId: String!): String!
+  getAllLogs: [logDto!]!
+  getTodayLog: [logDto2!]!
+  getGames: [gamesDto!]!
+}
+
+type Mutation {
+  addUser(userData: inputUserDto!): String!
+  updateUser(userData: inputUserDto!): userDto!
+  deleteUser(userIndex: Float!): userDto!
+  addLog(addLogInput: inputAddLogDot!): String!
+  reservedGame(reservedData: inputReservedDto!): String!
+  multiReservedGame(data: inputMultiReservedDto!): String!
+  boardGame(data: inputBoardDto!): [String!]!
+  cancelReserved(data: inputCancelDto!): [gamesDto!]!
+}
+
+input inputUserDto {
+  created: String
+  userGender: String
+  userId: String
+  userBirthDay: String
+  userName: String
+  userPw: String
+  userSchool: String
+  friends: [String!]
+  userNumber: String
+  id: Int
+  deletedTime: String
+}
+
+input inputAddLogDot {
+  gameName: String!
+  userId: [String!]!
+}
+
+input inputReservedDto {
+  name: String!
+  gameNumber: Int!
+  userId: String!
+}
+
+input inputMultiReservedDto {
+  name: String!
+  userIds: [String!]!
+  select: [Boolean!]!
+}
+
+input inputBoardDto {
+  name: String!
+  userIds: [String!]!
+}
+
+input inputCancelDto {
+  gameName: String!
+  gamesData: [inputGamesDto!]!
+  newData: [inputGameDto!]!
+}
+
+input inputGamesDto {
+  id: String!
+  users: [inputGameDto!]!
+}
+
+input inputGameDto {
+  userId: String!
+  startTime: String!
+}
