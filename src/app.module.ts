@@ -5,6 +5,7 @@ import { ConfigModule } from "@nestjs/config";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { LogsModule } from "./logs/logs.module";
 import { GameModule } from "./game/game.module";
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { GameModule } from "./game/game.module";
     LogsModule,
     GameModule
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: []
 })
 export class AppModule {
