@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { inputUserDto, userDto } from './users.dto';
 import { arrayUnion, doc, getDoc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../firebase";
 
 @Injectable()

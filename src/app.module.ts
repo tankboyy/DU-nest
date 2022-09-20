@@ -28,7 +28,7 @@ import { GameModule } from './game/game.module';
       // }),
     }),
     UsersModule,
-    LogsModule,
+    // LogsModule,
     GameModule,
   ],
   controllers: [],
