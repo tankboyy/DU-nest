@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { LogsModule } from "./logs/logs.module";
 import { GameModule } from "./game/game.module";
 import { AppController } from './app.controller';
+import { firebaseConfig } from "./firebase";
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { AppController } from './app.controller';
     }),
     UsersModule,
     LogsModule,
-    GameModule
+    GameModule,
+    firebaseConfig
   ],
   controllers: [AppController],
   providers: []
