@@ -1,22 +1,22 @@
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { UsersModule } from './users/users.module';
-import { ConfigModule } from '@nestjs/config';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { LogsModule } from './logs/logs.module';
-import { GameModule } from './game/game.module';
+import { Module } from "@nestjs/common";
+import { GraphQLModule } from "@nestjs/graphql";
+import { UsersModule } from "./users/users.module";
+import { ConfigModule } from "@nestjs/config";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { LogsModule } from "./logs/logs.module";
+import { GameModule } from "./game/game.module";
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'src/graphql/schema.gql',
-      playground: true,
+      autoSchemaFile: "src/graphql/schema.gql",
+      playground: true
       // typePaths: ['**/*.graphql'],
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : 'env.pro',
+      envFilePath: process.env.NODE_ENV === "dev" ? ".env.dev" : "env.pro"
       // ignoreEnvFile: process.env.NODE_ENV !== 'dev',
       // validationSchema: Joi.object({
       //   NODE_ENV: Joi.string().valid('dev', 'prod').required(),
@@ -28,10 +28,11 @@ import { GameModule } from './game/game.module';
       // }),
     }),
     UsersModule,
-    // LogsModule,
-    GameModule,
+    LogsModule,
+    GameModule
   ],
   controllers: [],
-  providers: [],
+  providers: []
 })
-export class AppModule {}
+export class AppModule {
+}
