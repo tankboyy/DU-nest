@@ -30,6 +30,7 @@
 		"@nestjs/mercurius": "^10.1.0",
 		"@nestjs/platform-express": "^8.0.0",
 		"apollo-server-express": "^3.10.2",
+		"class-validator": "^0.13.2",
 		"cross-env": "^7.0.3",
 		"firebase": "^9.10.0",
 		"googleapis": "^107.0.0",

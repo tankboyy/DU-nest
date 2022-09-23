@@ -1,7 +1,13 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { GameService, TgameData } from "./game.service";
-import { inputUserDto } from "../users/users.dto";
-import { gamesDto, inputBoardDto, inputCancelDto, inputMultiReservedDto, inputReservedDto } from "./game.dto";
+import { GameService } from "./game.service";
+import {
+  gamesDto,
+  inputBoardDto,
+  inputCancelDto,
+  inputMultiReservedDto,
+  inputReservedDto,
+  TgameData
+} from "./game.dto";
 
 @Resolver()
 export class GameResolver {
@@ -10,10 +16,6 @@ export class GameResolver {
 
 
     }
-  // @Mutation(() => String)
-  //   addUser(@Args('userData') userData: inputUserDto) {
-  //     return this.usersService.addUser(userData);
-  //   }
   @Query(() => [gamesDto])
   getGames(): Promise<TgameData[]> {
     return this.gameService.getGames()

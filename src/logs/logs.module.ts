@@ -3,10 +3,11 @@ import { LogsResolver } from "./logs.resolver";
 import { LogsService } from "./logs.service";
 import { UsersModule } from "../users/users.module";
 import { firebaseConfig } from "../firebase";
+import { LogsController } from './logs.controller';
 
 @Module({
   imports: [UsersModule, firebaseConfig],
-  controllers: [],
+  controllers: [LogsController],
   providers: [LogsResolver, LogsService],
   exports: [LogsResolver, LogsService]
 })
