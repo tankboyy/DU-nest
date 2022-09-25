@@ -7,9 +7,9 @@ export class LogsController {
   constructor(private readonly logsService: LogsService) {
   }
 
-  @Get("all")
-  async getAllLogs(){
-    return await this.logsService.getAllLogs().then(data => {
+  @Post("all")
+  async getAllLogs(@Body() dateData: {start: string, end: string}){
+    return await this.logsService.getAllLogs(dateData).then(data => {
       return data
     })
   }

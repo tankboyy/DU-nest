@@ -51,13 +51,15 @@ export class LogsService {
 
     let todayLog: LogsService["logsType"][] = [];
     let allLogs: LogsService["logsType"][] = [];
-    this.getAllLogs().then((data) => {
+    await this.getAllLogs().then((data) => {
+      allLogs = data
       data.forEach((log) => {
         const middle = new Date(new Date(log.currentTime).toUTCString());
         middle.setHours(middle.getHours() + 9);
         if (time.start <= middle && middle <= time.end) todayLog.push(log);
       });
     });
+
     return { todayLog, allLogs };
   }
 

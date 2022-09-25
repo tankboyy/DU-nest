@@ -124,7 +124,8 @@ export class GameService {
   }
 
   async boardGame(data: Omit<multiGameDataType, "select">) {
-    let playedUser: string[];
+    const gameLogDoc = doc(this.fb.db, "logs", "gameLog2");
+    let playedUser: string[] = []
     let allLogs1;
     this.logsResolver.getTodayLog().then(({ allLogs, todayLog }) => {
       allLogs1 = allLogs;
@@ -144,7 +145,7 @@ export class GameService {
         }
       });
     }
-    this.usersResolver.getAllUsers().then((usersData) => {
+    this.usersResolver.getAllUsers().then(async (usersData) => {
       usersData.forEach((userData) => {
         filteredIds.forEach((id) => {
           if (userData.userId === id) {
@@ -158,9 +159,8 @@ export class GameService {
           }
         });
       });
+      await setDoc(gameLogDoc, { logs: allLogs1 });
     });
-    const gameLogDoc = doc(this.fb.db, "logs", "gameLog2");
-    await setDoc(gameLogDoc, { logs: allLogs1 });
     return filteredIds;
   }
 
