@@ -1,27 +1,30 @@
-import { Injectable } from "@nestjs/common";
-import { firebaseConfig } from "../firebase";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
-import { AppModule } from "../app.module";
-import { initializeApp } from "firebase/app";
-import { LogsResolver } from "../logs/logs.resolver";
-import { UsersResolver } from "../users/users.resolver";
-import { cancelType, gamesType, multiGameDataType, reservedDataType, TgameData } from "./game.dto";
-
-
+import { Injectable } from '@nestjs/common';
+import { firebaseConfig } from '../firebase';
+import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { AppModule } from '../app.module';
+import { initializeApp } from 'firebase/app';
+import { LogsResolver } from '../logs/logs.resolver';
+import { UsersResolver } from '../users/users.resolver';
+import {
+  cancelType,
+  gamesType,
+  multiGameDataType,
+  reservedDataType,
+  TgameData,
+} from './game.dto';
 
 @Injectable()
 export class GameService {
   constructor(
     private readonly fb: firebaseConfig,
     private readonly logsResolver: LogsResolver,
-    private readonly usersResolver: UsersResolver
-  ) {
-  }
+    private readonly usersResolver: UsersResolver,
+  ) {}
 
-  gameList = ["오락기", "축구", "컴퓨터", "탁구", "포켓볼", "플스"];
+  gameList = ['오락기', '축구', '컴퓨터', '탁구', '포켓볼', '플스'];
 
   async getGames() {
-    const gamesRef = doc(this.fb.db, "game", "gamesState");
+    const gamesRef = doc(this.fb.db, 'game', 'gamesState');
     const snapshots = await getDoc(gamesRef);
     const gamesData = snapshots.data();
 
@@ -30,7 +33,7 @@ export class GameService {
       value.map((item, i) => {
         const endTime = new Date(item.startTime);
         endTime.setMinutes(endTime.getMinutes() + 40);
-        if (endTime < new Date()) value[i] = { userId: "", startTime: "" };
+        if (endTime < new Date()) value[i] = { userId: '', startTime: '' };
       });
       const newValue = { id: key, users: [...value] };
       newData.push(newValue);
@@ -39,7 +42,7 @@ export class GameService {
   }
 
   async reservedGame(reservedData: reservedDataType) {
-    const gamesRef = doc(this.fb.db, "game", "gamesState");
+    const gamesRef = doc(this.fb.db, 'game', 'gamesState');
     let nextData: gamesType;
     this.logsResolver.getTodayLog().then(({ todayLog }) => {
       if (todayLog !== undefined) {
@@ -57,8 +60,8 @@ export class GameService {
         const newData = { ...item };
         item.users.forEach((item2, i) => {
           if (item2.userId === reservedData.userId) {
-            newData.users[i].userId = "";
-            newData.users[i].startTime = "";
+            newData.users[i].userId = '';
+            newData.users[i].startTime = '';
           }
         });
 
@@ -69,13 +72,13 @@ export class GameService {
         nextData = { ...nextData, [item.id]: newData };
       });
     });
-    console.log(nextData, "nextData");
+    console.log(nextData, 'nextData');
     // await setDoc(gamesRef, nextData);
-    return "성공";
+    return '성공';
   }
 
   async multiReservedGame(data: multiGameDataType) {
-    const gamesRef = doc(this.fb.db, "game", "gamesState");
+    const gamesRef = doc(this.fb.db, 'game', 'gamesState');
     let playedUser: string[] = [];
     this.logsResolver.getTodayLog().then(({ todayLog }) => {
       if (todayLog !== undefined) {
@@ -99,8 +102,8 @@ export class GameService {
         item.users.forEach((item2, i) => {
           data.userIds.forEach((id) => {
             if (item2.userId === id) {
-              newData[i].userId = "";
-              newData[i].startTime = "";
+              newData[i].userId = '';
+              newData[i].startTime = '';
             }
           });
         });
@@ -109,7 +112,10 @@ export class GameService {
           let i = 0;
           data.select.forEach((selectData, index) => {
             if (selectData) {
-              newData[index] = { userId: data.userIds[i], startTime: startTime };
+              newData[index] = {
+                userId: data.userIds[i],
+                startTime: startTime,
+              };
               i++;
             }
           });
@@ -117,15 +123,14 @@ export class GameService {
         console.log(nextData);
         nextData = { ...nextData, [item.id]: newData };
       });
-        await setDoc(gamesRef, nextData);
+      await setDoc(gamesRef, nextData);
     });
-    return "성공";
-
+    return '성공';
   }
 
-  async boardGame(data: Omit<multiGameDataType, "select">) {
-    const gameLogDoc = doc(this.fb.db, "logs", "gameLog2");
-    let playedUser: string[] = []
+  async boardGame(data: Omit<multiGameDataType, 'select'>) {
+    const gameLogDoc = doc(this.fb.db, 'logs', 'gameLog2');
+    let playedUser: string[] = [];
     let allLogs1;
     this.logsResolver.getTodayLog().then(({ allLogs, todayLog }) => {
       allLogs1 = allLogs;
@@ -154,7 +159,7 @@ export class GameService {
               gameName: data.name,
               userId: id,
               currentTime: String(new Date()),
-              userGender: userData.userGender
+              userGender: userData.userGender,
             });
           }
         });
@@ -165,8 +170,8 @@ export class GameService {
   }
 
   async cancelReserved(data: cancelType) {
-    const newGamesData = [...data.gamesData];
-    data.gamesData.forEach((item, i) => {
+    const newGamesData = Object.values(data.gamesData);
+    Object.values(data.gamesData).forEach((item, i) => {
       if (item.id === data.gameName) {
         newGamesData[i].users = data.newData;
       }
@@ -175,10 +180,8 @@ export class GameService {
     newGamesData.forEach((item) => {
       newd = { ...newd, [item.id]: item.users };
     });
-    const gamesRef = doc(this.fb.db, "game", "gamesState");
+    const gamesRef = doc(this.fb.db, 'game', 'gamesState');
     await setDoc(gamesRef, newd);
     return newGamesData;
-    // return "성공"
   }
-
 }
