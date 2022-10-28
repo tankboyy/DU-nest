@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { inputUserDto, userDto } from './users.dto';
-import { arrayUnion, doc, getDoc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
-import { firebaseConfig } from "../firebase";
+import { inputUserDto, loginType, Tuser, userDto } from './users.dto';
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { firebaseConfig } from '../firebase';
 
 @Injectable()
 export class UsersService {
-
   constructor(private readonly fb: firebaseConfig) {}
 
-
   async getAllUsers(): Promise<userDto[]> {
-
     const usersRef = doc(this.fb.db, 'users', 'usersData');
     const usersSnap = await getDoc(usersRef);
     return usersSnap.data().data;
   }
-
 
   async getUser(userId: string) {
     let usersArr: userDto[];
@@ -28,7 +24,7 @@ export class UsersService {
   }
 
   async idCheck(userId: string) {
-    let idsArr: userDto[] = [];
+    const idsArr: userDto[] = [];
     await this.getAllUsers().then((data) => {
       data.filter((item: userDto) => {
         if (item.userName.includes(userId)) idsArr.push(item);
@@ -67,6 +63,27 @@ export class UsersService {
     await setDoc(usersRef, { data: newData });
   }
 
+  async login(loginData: loginType) {
+    console.log(loginData);
+    const usersRef = doc(this.fb.db, 'users', 'usersData');
+    const usersSnap = await getDoc(usersRef);
+    const usersData = usersSnap.data().data;
+
+    let user = {};
+
+    usersData.map((userData: Tuser) => {
+      if (userData.userId === loginData.data.userId) {
+        if (userData.userPw === loginData.data.userPw) user = userData;
+        else if (userData.userPw !== loginData.data.userPw)
+          throw new Error('비밀번호가 일치하지 않습니다.');
+      }
+    });
+
+    if (Object.keys(user).length === 0)
+      throw new Error('일치하는 아이디가 없습니다.');
+    return user;
+  }
+
   async deleteUser(userIndex: number) {
     const usersRef = doc(this.fb.db, 'users', 'usersData');
 
@@ -76,10 +93,13 @@ export class UsersService {
 
       const deleteUsersRef = doc(this.fb.db, 'users', 'deleteUsers');
       const deleteUsersSnap = await getDoc(deleteUsersRef);
-      const deleteUsersData = deleteUsersSnap.data()!.data;
-      const newDData = [...deleteUsersData, deletedUserData]
-      await Promise.all([setDoc(deleteUsersRef, { data: newDData }), setDoc(usersRef, {data: users})])
-      return deletedUserData
+      const deleteUsersData = deleteUsersSnap.data().data;
+      const newDData = [...deleteUsersData, deletedUserData];
+      await Promise.all([
+        setDoc(deleteUsersRef, { data: newDData }),
+        setDoc(usersRef, { data: users }),
+      ]);
+      return deletedUserData;
     });
   }
 }
