@@ -7,6 +7,9 @@ import { LogsModule } from "./logs/logs.module";
 import { GameModule } from "./game/game.module";
 import { AppController } from './app.controller';
 import { firebaseConfig } from "./firebase";
+import { ApiController } from './api/api.controller';
+import { ApiService } from './api/api.service';
+import { ApiModule } from './api/api.module';
 
 @Module({
   imports: [
@@ -32,10 +35,11 @@ import { firebaseConfig } from "./firebase";
     UsersModule,
     LogsModule,
     GameModule,
-    firebaseConfig
+    firebaseConfig,
+    ApiModule
   ],
-  controllers: [AppController],
-  providers: []
+  controllers: [AppController, ApiController],
+  providers: [ApiService]
 })
 export class AppModule {
 }

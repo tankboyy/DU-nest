@@ -31,6 +31,8 @@
 		"@nestjs/platform-express": "^8.0.0",
 		"@types/dotenv": "^8.2.0",
 		"apollo-server-express": "^3.10.2",
+		"axios": "^1.2.0",
+		"cheerio": "^1.0.0-rc.12",
 		"class-validator": "^0.13.2",
 		"cross-env": "^7.0.3",
 		"dotenv": "^16.0.2",
@@ -38,6 +40,7 @@
 		"googleapis": "^107.0.0",
 		"graphql": "^16.6.0",
 		"nestjs-firebase": "^8.2.3",
+		"puppeteer": "^19.3.0",
 		"reflect-metadata": "^0.1.13",
 		"rimraf": "^3.0.2",
 		"rxjs": "^7.2.0"

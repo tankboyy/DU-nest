@@ -36,7 +36,7 @@ export class LogsService {
     const logsData = snapshot.data().logs;
 
     let newData: LogsService["logsType"][] = logsData.filter(
-      (log: LogsService["logsType"]) => {
+    (log: LogsService["logsType"]) => {
         const now = new Date(new Date(log.currentTime).toUTCString());
         if (start <= now && now <= end) return log;
       }
@@ -60,6 +60,17 @@ export class LogsService {
       });
     });
 
+    // const writeData = {}
+    // allLogs.map((item, i) => {
+    //   console.log(i, item)
+    //   writeData[i + 8930] = item
+    // })
+
+
+    //
+    const fs = require('fs');
+    // fs.writeFileSync('./11.json', JSON.stringify(writeData));
+    // console.log(JSON.parse(fs.readFileSync('./logs.json')))
     return { todayLog, allLogs };
   }
 

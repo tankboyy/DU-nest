@@ -31,7 +31,7 @@ export class GameService {
 		Object.entries(gamesData).forEach(([key, value]) => {
 			value.map((item, i) => {
 				const endTime = new Date(item.startTime);
-				endTime.setMinutes(endTime.getMinutes() + 40);
+				endTime.setMinutes(endTime.getMinutes() + key === '노래방' ? 30 : 40);
 				if (endTime < new Date()) value[i] = {userId: '', startTime: ''};
 			});
 			const newValue = {id: key, users: [...value]};

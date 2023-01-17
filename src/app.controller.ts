@@ -1,12 +1,15 @@
 import { Controller, Get } from "@nestjs/common";
-import { firebaseConfig } from "./firebase";
+import { ApiService } from "./api/api.service";
 
-@Controller("/")
+@Controller("/api")
 export class AppController {
+  constructor(private readonly apiService: ApiService) {
+  }
 
-  @Get("")
-  getHello() {
-    console.log(process.env.NODE_ENV)
-    return "hi";
+  @Get("/ss")
+  async getC() {
+    return this.apiService.getC().then((data) => {
+      return data
+    })
   }
 }
