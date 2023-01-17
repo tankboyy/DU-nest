@@ -7,9 +7,7 @@ dotenv.config({
 	path: path.resolve(
 		process.env.NODE_ENV === 'production'
 			? '.env'
-			: process.env.NODE_ENV === 'stage'
-				? '.stage.env'
-				: '.env.dev',
+			: '.env.dev'
 	),
 });
 
