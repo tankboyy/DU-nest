@@ -60,3 +60,14 @@ export class inputAddLogDot {
   @Field(() => [String])
   userId: string[];
 }
+
+@InputType()
+export class inputAddData {
+  @Field(() => String)
+  gameName: string
+
+  @Field(() => String)
+  userId: string
+
+
+}

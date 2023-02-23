@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { inputAddLogDot, inputLogDto } from "./logs.dto";
+import { inputAddData, inputAddLogDot, inputLogDto } from "./logs.dto";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { UsersService } from "../users/users.service";
 import { userDto } from "../users/users.dto";
@@ -99,5 +99,25 @@ export class LogsService {
       await setDoc(logsDoc, { logs: logsData });
     });
     return "addLog!!";
+  }
+
+  async getReserveLog() {
+    const logsDoc = doc(this.fb.db, "logs", "reserveLog");
+    const snapshot = await getDoc(logsDoc);
+    const logsData = snapshot.data().logArr;
+
+    console.log(logsData, "zz")
+
+    return logsData
+  }
+
+  async addReserveLog(addData: inputAddData) {
+    const logsDoc = doc(this.fb.db, "logs", "reserveLog");
+    const snapshot = await getDoc(logsDoc);
+    const logsData = snapshot.data().logArr;
+
+    console.log(logsData)
+
+    return "성공"
   }
 }

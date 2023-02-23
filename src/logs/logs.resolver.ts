@@ -5,38 +5,41 @@ import { LogsService } from './logs.service';
 import { AppModule } from '../app.module';
 
 interface todayLogType {
-  allLogs: {
-    userName: string;
-    gameName: string;
-    userId: string;
-    userGender: string;
-    currentTime: string;
-  };
-  todayLog: {
-    userName: string;
-    gameName: string;
-    userId: string;
-    userGender: string;
-    currentTime: string;
-  };
+	allLogs: {
+		userName: string;
+		gameName: string;
+		userId: string;
+		userGender: string;
+		currentTime: string;
+	};
+	todayLog: {
+		userName: string;
+		gameName: string;
+		userId: string;
+		userGender: string;
+		currentTime: string;
+	};
 }
 
 @Resolver(() => ObjectType)
 export class LogsResolver {
-  constructor(private readonly logsService: LogsService) {}
+	constructor(private readonly logsService: LogsService) {
+	}
 
-  @Query(() => [logDto])
-  async getAllLogs() {
-    return this.logsService.getAllLogs();
-  }
+	@Query(() => [logDto])
+	async getAllLogs() {
+		return this.logsService.getAllLogs();
+	}
 
-  @Query(() => [logDto2])
-  async getTodayLog() {
-    return this.logsService.getTodayLog();
-  }
+	@Query(() => [logDto2])
+	async getTodayLog() {
+		return this.logsService.getTodayLog();
+	}
 
-  @Mutation(() => String)
-  async addLog(@Args('addLogInput') addLogInput: inputAddLogDot) {
-    return this.logsService.addLog(addLogInput);
-  }
+	@Mutation(() => String)
+	async addLog(@Args('addLogInput') addLogInput: inputAddLogDot) {
+		return this.logsService.addLog(addLogInput);
+	}
+
+
 }

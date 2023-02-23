@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
-import { cancelType, multiGameDataType } from "./game.dto";
+import { cancelType, multiGameDataType, reservedDataType } from "./game.dto";
 import { multiReservedDataDto } from "./game.dto";
 import { GameService } from "./game.service";
 
@@ -21,6 +21,18 @@ export class GameController {
     return await this.gameService.multiReservedGame(multiReservedData).then(data => {
       return data;
     });
+  }
+
+  @Post("/resSoloGame")
+  async reservedGame(@Body() reservedGameData: reservedDataType) {
+    return await this.gameService.reservedGame(reservedGameData).then(data => {
+      return data;
+    })
+  }
+
+  @Post("/test1")
+  async test(@Body() testData: {}) {
+    return await this.gameService.test(testData).then(data => data)
   }
 
   @Post("/cancelG")

@@ -21,7 +21,7 @@ export class UsersController {
   }
 
   @Post('/idcheck')
-  async idCheck(@Body() userId: string) {
+  async idCheck(@Body() userId: {userId: string}) {
     return this.usersService.idCheck(userId).then((data) => {
       return data;
     });

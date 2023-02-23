@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { firebaseConfig } from '../firebase';
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 import { LogsResolver } from '../logs/logs.resolver';
 import { UsersResolver } from '../users/users.resolver';
 import {
@@ -10,6 +10,8 @@ import {
 	reservedDataType,
 	TgameData,
 } from './game.dto';
+import { initializeApp } from "firebase-admin/app";
+import { log } from "util";
 
 @Injectable()
 export class GameService {
@@ -20,27 +22,143 @@ export class GameService {
 	) {
 	}
 
-	gameList = ['오락기', '축구', '컴퓨터', '탁구', '포켓볼', '플스'];
 
 	async getGames() {
 		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
 		const snapshots = await getDoc(gamesRef);
 		const gamesData = snapshots.data();
-
+		// console.log(gamesData)
 		let newData: TgameData[] = [];
 		Object.entries(gamesData).forEach(([key, value]) => {
-			value.map((item, i) => {
+			// console.log(value)
+			value.users.map((item, i) => {
 				const endTime = new Date(item.startTime);
 				endTime.setMinutes(endTime.getMinutes() + key === '노래방' ? 30 : 40);
-				if (endTime < new Date()) value[i] = {userId: '', startTime: ''};
+				if (endTime < new Date()) {
+					value.users[i] = {userId: '', startTime: ''}
+				};
 			});
-			const newValue = {id: key, users: [...value]};
+			const newValue = {id: key, users: [...value.users]};
 			newData.push(newValue);
 		});
+		// console.log(newData)
 		return newData;
 	}
 
+	async test(testData: {}) {
+		// const app = initializeApp();
+		// const myRefreshToken = {}
+		// const db = getFirestore();
+		const gamesRef = doc(this.fb.db, 'game', "gamesState");
+		const snapshots = await getDoc(gamesRef);
+
+		const gamesData = snapshots.data();
+		// const newData = Object.values(gamesData).map(item => {
+		// 	// console.log(item)
+		// 	newd = {...newd, [item.id]: item}
+		// })
+		// console.log(newd)
+	// 	await setDoc(gamesRef, {data:
+	// 		[{
+	// 			id: '컴퓨터', users: [{userId: '', startTime: ''},
+	// 				{startTime: '', userId: ''},
+	// 				{userId: '', startTime: ''},
+	// 				{startTime: '', userId: ''},
+	// 				{startTime: '', userId: ''}
+	// 			]
+	// 		},
+	// 	{
+	// 		users: [
+	// 			{userId: '', startTime: ''},
+	// 			{startTime: '', userId: ''},
+	// 			{userId: '', startTime: ''},
+	// 			{startTime: '', userId: ''}
+	// 		],
+	// 			id
+	// 	:
+	// 		'축구'
+	// 	}
+	// ,
+	// 	{
+	// 		id: '노래방',
+	// 			users
+	// 	:
+	// 		[
+	// 			{userId: '', startTime: ''},
+	// 			{startTime: '', userId: ''},
+	// 			{startTime: '', userId: ''},
+	// 			{startTime: '', userId: ''}
+	// 		]
+	// 	}
+	// ,
+	// 	{
+	// 		users: [{userId: '', startTime: ''}, {userId: '', startTime: ''}],
+	// 			id
+	// 	:
+	// 		'스위치'
+	// 	}
+	// ,
+	// 	{
+	// 		id: '탁구',
+	// 			users
+	// 	:
+	// 		[
+	// 			{userId: '', startTime: ''},
+	// 			{userId: '', startTime: ''},
+	// 			{userId: '', startTime: ''},
+	// 			{userId: '', startTime: ''}
+	// 		]
+	// 	}
+	// ,
+	// 	{
+	// 		users: [
+	// 			{userId: '', startTime: ''},
+	// 			{startTime: '', userId: ''},
+	// 			{startTime: '', userId: ''},
+	// 			{userId: '', startTime: ''},
+	// 			{userId: '', startTime: ''},
+	// 			{startTime: '', userId: ''}
+	// 		],
+	// 			id
+	// 	:
+	// 		'충전'
+	// 	}
+	// ,
+	// 	{
+	// 		users: [
+	// 			{userId: '', startTime: ''},
+	// 			{
+	// 				startTime: 'Thu Feb 23 2023 10:00:54 GMT+0900 (Korean Standard Time)',
+	// 				userId: '오석중'
+	// 			},
+	// 			{userId: '', startTime: ''},
+	// 			{startTime: '', userId: ''}
+	// 		],
+	// 			id
+	// 	:
+	// 		'포켓볼'
+	// 	}
+	// ,
+	// 	{
+	// 		users: [{startTime: '', userId: ''}, {userId: '', startTime: ''}],
+	// 			id
+	// 	:
+	// 		'플스'
+	// 	}
+	// ,
+	// 	{
+	// 		users: [{startTime: '', userId: ''}, {startTime: '', userId: ''}],
+	// 			id
+	// 	:
+	// 		'오락기'
+	// 	}
+	// ]
+	// });
+		return "test"
+	}
+
 	async reservedGame(reservedData: reservedDataType) {
+		console.log(reservedData)
 		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
 		let nextData: gamesType;
 		this.logsResolver.getTodayLog().then(({todayLog}) => {
@@ -54,7 +172,7 @@ export class GameService {
 				});
 			}
 		});
-		this.getGames().then((data) => {
+		this.getGames().then(async (data) => {
 			data.forEach((item) => {
 				const newData = {...item};
 				item.users.forEach((item2, i) => {
@@ -70,9 +188,8 @@ export class GameService {
 				}
 				nextData = {...nextData, [item.id]: newData};
 			});
+			await setDoc(gamesRef, nextData);
 		});
-		console.log(nextData, 'nextData');
-		// await setDoc(gamesRef, nextData);
 		return '성공';
 	}
 
