@@ -26,18 +26,16 @@ export class GameService {
 		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
 		const snapshots = await getDoc(gamesRef);
 		const gamesData = snapshots.data();
-		// console.log(gamesData)
 		let newData: TgameData[] = [];
 		Object.entries(gamesData).forEach(([key, value]) => {
-			console.log(value)
-			value.map((item, i) => {
+			value.users.map((item, i) => {
 				const endTime = new Date(item.startTime);
 				endTime.setMinutes(endTime.getMinutes() + key === '노래방' ? 30 : 40);
 				if (endTime < new Date()) {
-					value[i] = {userId: '', startTime: ''}
-				};
+					value.users[i] = {userId: '', startTime: ''}
+				}
 			});
-			const newValue = {id: key, users: [...value]};
+			const newValue = {id: key, users: [...value.users]};
 			newData.push(newValue);
 		});
 		// console.log(newData)
@@ -50,7 +48,7 @@ export class GameService {
 	}
 
 	async reservedGame(reservedData: reservedDataType) {
-		console.log(reservedData)
+		console.log(reservedData, "solo res start")
 		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
 		let nextData: gamesType;
 		this.logsResolver.getTodayLog().then(({todayLog}) => {
