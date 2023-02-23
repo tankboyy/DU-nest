@@ -11,7 +11,6 @@ import {
 	TgameData,
 } from './game.dto';
 import { initializeApp } from "firebase-admin/app";
-import { log } from "util";
 
 @Injectable()
 export class GameService {
@@ -46,114 +45,7 @@ export class GameService {
 	}
 
 	async test(testData: {}) {
-		// const app = initializeApp();
-		// const myRefreshToken = {}
-		// const db = getFirestore();
-		const gamesRef = doc(this.fb.db, 'game', "gamesState");
-		const snapshots = await getDoc(gamesRef);
-
-		const gamesData = snapshots.data();
-		// const newData = Object.values(gamesData).map(item => {
-		// 	// console.log(item)
-		// 	newd = {...newd, [item.id]: item}
-		// })
-		// console.log(newd)
-	// 	await setDoc(gamesRef, {data:
-	// 		[{
-	// 			id: '컴퓨터', users: [{userId: '', startTime: ''},
-	// 				{startTime: '', userId: ''},
-	// 				{userId: '', startTime: ''},
-	// 				{startTime: '', userId: ''},
-	// 				{startTime: '', userId: ''}
-	// 			]
-	// 		},
-	// 	{
-	// 		users: [
-	// 			{userId: '', startTime: ''},
-	// 			{startTime: '', userId: ''},
-	// 			{userId: '', startTime: ''},
-	// 			{startTime: '', userId: ''}
-	// 		],
-	// 			id
-	// 	:
-	// 		'축구'
-	// 	}
-	// ,
-	// 	{
-	// 		id: '노래방',
-	// 			users
-	// 	:
-	// 		[
-	// 			{userId: '', startTime: ''},
-	// 			{startTime: '', userId: ''},
-	// 			{startTime: '', userId: ''},
-	// 			{startTime: '', userId: ''}
-	// 		]
-	// 	}
-	// ,
-	// 	{
-	// 		users: [{userId: '', startTime: ''}, {userId: '', startTime: ''}],
-	// 			id
-	// 	:
-	// 		'스위치'
-	// 	}
-	// ,
-	// 	{
-	// 		id: '탁구',
-	// 			users
-	// 	:
-	// 		[
-	// 			{userId: '', startTime: ''},
-	// 			{userId: '', startTime: ''},
-	// 			{userId: '', startTime: ''},
-	// 			{userId: '', startTime: ''}
-	// 		]
-	// 	}
-	// ,
-	// 	{
-	// 		users: [
-	// 			{userId: '', startTime: ''},
-	// 			{startTime: '', userId: ''},
-	// 			{startTime: '', userId: ''},
-	// 			{userId: '', startTime: ''},
-	// 			{userId: '', startTime: ''},
-	// 			{startTime: '', userId: ''}
-	// 		],
-	// 			id
-	// 	:
-	// 		'충전'
-	// 	}
-	// ,
-	// 	{
-	// 		users: [
-	// 			{userId: '', startTime: ''},
-	// 			{
-	// 				startTime: 'Thu Feb 23 2023 10:00:54 GMT+0900 (Korean Standard Time)',
-	// 				userId: '오석중'
-	// 			},
-	// 			{userId: '', startTime: ''},
-	// 			{startTime: '', userId: ''}
-	// 		],
-	// 			id
-	// 	:
-	// 		'포켓볼'
-	// 	}
-	// ,
-	// 	{
-	// 		users: [{startTime: '', userId: ''}, {userId: '', startTime: ''}],
-	// 			id
-	// 	:
-	// 		'플스'
-	// 	}
-	// ,
-	// 	{
-	// 		users: [{startTime: '', userId: ''}, {startTime: '', userId: ''}],
-	// 			id
-	// 	:
-	// 		'오락기'
-	// 	}
-	// ]
-	// });
+		initializeApp({})
 		return "test"
 	}
 

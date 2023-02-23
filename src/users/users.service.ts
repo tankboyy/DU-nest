@@ -31,11 +31,11 @@ export class UsersService {
 		await this.getAllUsers().then((data) => {
 			data.forEach((item: userDto) => {
 				if (item.userName.includes(Id)) {
+					console.log(item.userName);
 					idsArr.push(item);
 				}
 			});
 		});
-
 		return idsArr.length === 0 ? `${Id}` : `${Id}${idsArr.length}`;
 	}
 
