@@ -30,15 +30,15 @@ export class GameService {
 		// console.log(gamesData)
 		let newData: TgameData[] = [];
 		Object.entries(gamesData).forEach(([key, value]) => {
-			// console.log(value)
-			value.users.map((item, i) => {
+			console.log(value)
+			value.map((item, i) => {
 				const endTime = new Date(item.startTime);
 				endTime.setMinutes(endTime.getMinutes() + key === '노래방' ? 30 : 40);
 				if (endTime < new Date()) {
-					value.users[i] = {userId: '', startTime: ''}
+					value[i] = {userId: '', startTime: ''}
 				};
 			});
-			const newValue = {id: key, users: [...value.users]};
+			const newValue = {id: key, users: [...value]};
 			newData.push(newValue);
 		});
 		// console.log(newData)
