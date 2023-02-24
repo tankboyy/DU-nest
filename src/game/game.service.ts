@@ -29,8 +29,9 @@ export class GameService {
 		let newData: TgameData[] = [];
 		Object.entries(gamesData).forEach(([key, value]) => {
 			value.users.map((item, i) => {
+				if (!item.startTime) return
 				const endTime = new Date(item.startTime);
-				endTime.setMinutes(endTime.getMinutes() + key === '노래방' ? 30 : 40);
+				endTime.setMinutes(endTime.getMinutes() + 40);
 				if (endTime < new Date()) {
 					value.users[i] = {userId: '', startTime: ''}
 				}
@@ -38,7 +39,6 @@ export class GameService {
 			const newValue = {id: key, users: [...value.users]};
 			newData.push(newValue);
 		});
-		// console.log(newData)
 		return newData;
 	}
 
