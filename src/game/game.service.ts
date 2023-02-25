@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { firebaseConfig } from '../firebase';
-import { collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { LogsResolver } from '../logs/logs.resolver';
 import { UsersResolver } from '../users/users.resolver';
 import {
@@ -10,7 +10,13 @@ import {
 	reservedDataType,
 	TgameData,
 } from './game.dto';
-import { initializeApp } from "firebase-admin/app";
+import { initializeApp, ServiceAccount } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+import { credential, firestore } from "firebase-admin";
+import * as firestoreKey from "../../firestoreKey.json";
+import Timestamp = firestore.Timestamp;
+
+const serviceAccountKey = firestoreKey as ServiceAccount;
 
 @Injectable()
 export class GameService {
@@ -27,7 +33,9 @@ export class GameService {
 		const snapshots = await getDoc(gamesRef);
 		const gamesData = snapshots.data();
 		let newData: TgameData[] = [];
+		console.log(gamesData)
 		Object.entries(gamesData).forEach(([key, value]) => {
+			console.log(value);
 			value.users.map((item, i) => {
 				if (!item.startTime) return
 				const endTime = new Date(item.startTime);
@@ -43,8 +51,25 @@ export class GameService {
 	}
 
 	async test(testData: {}) {
-		initializeApp({})
-		return "test"
+		initializeApp({
+			credential: credential.cert(serviceAccountKey),
+		});
+		const db = getFirestore();
+		// const a = await db.collection("logCollection").get()
+		// a.forEach(item => console.log(item.id))
+		const b = await db.collection("logCollection").doc("202302")
+		// b.set({
+		// 	name: "name",
+		// 	age: 17
+		// }, {merge: true});
+		// console.log(await b.get())
+		// const gamesRef = await db.collection("game").doc("gamesState").get();
+		// console.log(gamesRef);
+		// console.log(Timestamp.fromDate(new Date('December 10, 1815')))
+		await b.set({
+			time2: Timestamp.fromDate(new Date())
+		}, {merge: true})
+		return await b.get()
 	}
 
 	async reservedGame(reservedData: reservedDataType) {
