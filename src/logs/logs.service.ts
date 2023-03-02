@@ -97,7 +97,6 @@ export class LogsService {
 
 						};
 						logsData.push(addData);
-						console.log(addData, "Zz", logsData[logsData.length - 1]);
 					}
 				});
 			});

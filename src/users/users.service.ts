@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { inputUserDto, loginType, Tuser, userDto } from './users.dto';
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { firebaseConfig } from '../firebase';
+import { getFirestore } from "firebase-admin/firestore";
 
 @Injectable()
 export class UsersService {
@@ -40,21 +41,28 @@ export class UsersService {
 	}
 
 	async addUser(userData: userDto) {
-		console.log(userData, 'service');
+		console.log("hi")
 		const created = String(new Date());
 		const userPw = `${userData.userBirthDay.split('-')[1]}${
 			userData.userBirthDay.split('-')[2]
 		}`;
 		const friends: string[] = [];
 		const usersRef = doc(this.fb.db, 'users', 'usersData');
-		await updateDoc(usersRef, {
+
+		const db = getFirestore();
+		const b = db.collection("usersCollection")
+		await Promise.all([updateDoc(usersRef, {
 			data: arrayUnion({
 				...userData,
 				created,
 				userPw,
 				friends,
 			}),
-		});
+		}), b.add({
+			...userData,
+			created,
+			userPw,
+		})])
 		return '성공';
 	}
 

@@ -25,6 +25,7 @@ async function bootstrap() {
 
 	initializeApp({
 		credential: credential.cert(serviceAccountKey),
+		databaseURL: 'https://dreamu-d6fe9.firestore.googleapis.com/'
 	});
 
 

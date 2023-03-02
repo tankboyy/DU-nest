@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { firebaseConfig } from '../firebase';
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
-import { LogsResolver } from '../logs/logs.resolver';
-import { UsersResolver } from '../users/users.resolver';
+import { Injectable } from "@nestjs/common";
+import { firebaseConfig } from "../firebase";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { LogsResolver } from "../logs/logs.resolver";
+import { UsersResolver } from "../users/users.resolver";
 import {
 	cancelType,
 	gamesType,
 	multiGameDataType,
 	reservedDataType,
-	TgameData,
-} from './game.dto';
+	TgameData
+} from "./game.dto";
 import { initializeApp, ServiceAccount } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { credential, firestore } from "firebase-admin";
-import Timestamp = firestore.Timestamp;
+import { credential, firestore, auth } from "firebase-admin";
+import { Timestamp } from "firebase/firestore";
 
 
 @Injectable()
@@ -21,23 +21,23 @@ export class GameService {
 	constructor(
 		private readonly fb: firebaseConfig,
 		private readonly logsResolver: LogsResolver,
-		private readonly usersResolver: UsersResolver,
+		private readonly usersResolver: UsersResolver
 	) {
 	}
 
 
 	async getGames() {
-		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
+		const gamesRef = doc(this.fb.db, "game", "gamesState");
 		const snapshots = await getDoc(gamesRef);
 		const gamesData = snapshots.data();
 		let newData: TgameData[] = [];
 		Object.entries(gamesData).forEach(([key, value]) => {
 			value.users.map((item, i) => {
-				if (!item.startTime) return
+				if (!item.startTime) return;
 				const endTime = new Date(item.startTime);
 				endTime.setMinutes(endTime.getMinutes() + 40);
 				if (endTime < new Date()) {
-					value.users[i] = {userId: '', startTime: ''}
+					value.users[i] = {userId: "", startTime: ""};
 				}
 			});
 			const newValue = {id: key, users: [...value.users]};
@@ -46,48 +46,73 @@ export class GameService {
 		return newData;
 	}
 
-	async test(testData: {}) {
 
-		// const a = await db.collection("logCollection").get()
-		// a.forEach(item => console.log(item.id))
+	async test(testData: {email: string, password: string}) {
+
 		const db = getFirestore();
-		const b = db.collection("logsCollection")
 
-		// await b.add({
-		// 	timestamp: new Date(),
-		// 	level: 'error',
-		// 	message: 'Something went wrong!'
-		// });
-		// console.log(await b.get());
 
-		// b.orderBy("timestamp").get()
-		// 	.then((data) => {
-		// 		data.forEach((doc) => {
-		// 			console.log(doc.id, doc.data().timestamp)
-		// 		})
-		// 	})
-		// 	.catch(err => console.log(err))
+		// 로그불러오기 + 한국시간으로 변경
+		// const db = getFirestore();
+		// const b = db.collection("logsCollection")
+		// b.orderBy("timestamp").get().then(data => {
+		// 	data.forEach(item => console.log(item.data().timestamp.toDate().toLocaleString('ko-KR', { timeZone:
+		// 'Asia/Seoul' }))) })
 
-		// b.set({
-		// 	name: "name",
-		// 	age: 17
-		// }, {merge: true});
-		// console.log(await b.get())
-		// const gamesRef = await db.collection("game").doc("gamesState").get();
-		// console.log(gamesRef);
-		// console.log(Timestamp.fromDate(new Date('December 10, 1815')))
-		// const data = {
-		// 	name: "오석중",
-		// 	gameName: "보드게임",
-		// 	time: Timestamp.fromDate(new Date())
-		// }
-		// await b.set(data, {merge: true})
-		return "성공"
+		// 새로운 회원가입
+		// const {email, password} = testData;
+		// const userRecord = await auth().createUser({email, password});
+		//
+		// console.log(userRecord.phoneNumber)
+
+		// gamesCollection 기본 설정값
+		const gameList = ["축구", "포켓볼", "탁구", "플스", "스위치", "오락기", "컴퓨터", "충전", "노래방"];
+		//
+		// // const db = getFirestore();
+		// const ref = db.collection("gamesCollection");
+		// gameList.forEach(game => {
+		// 	ref.doc(game).set({
+		// 				0: {startTime: new Date(), userId: ""},
+		// 				1: {startTime: new Date(), userId: ""},
+		// 				2: {startTime: new Date(), userId: ""},
+		// 				3: {startTime: new Date(), userId: ""},
+		// 				4: {startTime: new Date(), userId: ""},
+		// 				5: {startTime: new Date(), userId: ""}
+		// 			});
+		//});
+
+
+		// 체크
+		// const nowTime = new Date().toLocaleDateString();
+		// const nextTime = new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString();
+		// console.log(nowTime, nextTime);
+		// const logsRef = db.collection("logsCollection");
+		// logsRef
+		// 	.where("timestamp", ">=", firestore.Timestamp.fromDate(new Date(nowTime)))
+		// 	.where("timestamp", "<=", firestore.Timestamp.fromDate(new Date(nextTime)))
+		// 	.orderBy("timestamp")
+		// 	.get()
+		// 	.then(data => data.forEach(item => console.log(item.id, item.data().userId, item.data().timestamp.toDate().toLocaleString('ko-KR', { timeZone:'Asia/Seoul' }))))
+		// 	.catch(err => console.log(err));
+		//
+		// return "성공";
+		const gamesRef = db.collection("gamesCollection");
+		const data = await gamesRef.get();
+		const resultData = [];
+		data.forEach(item => {
+			resultData.push({
+				gameId: item.id,
+				gameData: item.data()
+			});
+		});
+		return resultData;
+
 	}
 
+
 	async reservedGame(reservedData: reservedDataType) {
-		console.log(reservedData, "solo res start")
-		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
+		console.log(reservedData, "solo res start");
+		const gamesRef = doc(this.fb.db, "game", "gamesState");
 		let nextData: gamesType;
 		this.logsResolver.getTodayLog().then(({todayLog}) => {
 			if (todayLog !== undefined) {
@@ -101,15 +126,15 @@ export class GameService {
 			}
 		})
 			.catch((err) => {
-				console.log(err)
-			})
+				console.log(err);
+			});
 		this.getGames().then(async (data) => {
 			data.forEach((item) => {
 				const newData = {...item};
 				item.users.forEach((item2, i) => {
 					if (item2.userId === reservedData.userId) {
-						newData.users[i].userId = '';
-						newData.users[i].startTime = '';
+						newData.users[i].userId = "";
+						newData.users[i].startTime = "";
 					}
 				});
 
@@ -121,11 +146,11 @@ export class GameService {
 			});
 			await setDoc(gamesRef, nextData);
 		});
-		return '성공';
+		return "성공";
 	}
 
 	async multiReservedGame(data: multiGameDataType) {
-		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
+		const gamesRef = doc(this.fb.db, "game", "gamesState");
 		let playedUser: string[] = [];
 		this.logsResolver.getTodayLog().then(({todayLog}) => {
 			if (todayLog !== undefined) {
@@ -149,8 +174,8 @@ export class GameService {
 				item.users.forEach((item2, i) => {
 					data.userIds.forEach((id) => {
 						if (item2.userId === id) {
-							newData[i].userId = '';
-							newData[i].startTime = '';
+							newData[i].userId = "";
+							newData[i].startTime = "";
 						}
 					});
 				});
@@ -161,7 +186,7 @@ export class GameService {
 						if (selectData) {
 							newData[index] = {
 								userId: data.userIds[i],
-								startTime: startTime,
+								startTime: startTime
 							};
 							i++;
 						}
@@ -172,11 +197,11 @@ export class GameService {
 			});
 			await setDoc(gamesRef, nextData);
 		});
-		return '성공';
+		return "성공";
 	}
 
-	async boardGame(data: Omit<multiGameDataType, 'select'>) {
-		const gameLogDoc = doc(this.fb.db, 'logs', 'gameLog2');
+	async boardGame(data: Omit<multiGameDataType, "select">) {
+		const gameLogDoc = doc(this.fb.db, "logs", "gameLog2");
 		let playedUser: string[] = [];
 		let allLogs1;
 		this.logsResolver.getTodayLog().then(({allLogs, todayLog}) => {
@@ -206,7 +231,7 @@ export class GameService {
 							gameName: data.name,
 							userId: id,
 							currentTime: String(new Date()),
-							userGender: userData.userGender,
+							userGender: userData.userGender
 						});
 					}
 				});
@@ -227,8 +252,37 @@ export class GameService {
 		newGamesData.forEach((item) => {
 			newd = {...newd, [item.id]: item.users};
 		});
-		const gamesRef = doc(this.fb.db, 'game', 'gamesState');
+		const gamesRef = doc(this.fb.db, "game", "gamesState");
 		await setDoc(gamesRef, newd);
 		return newGamesData;
+	}
+
+	async newGetGames() {
+		const db = getFirestore();
+		const gamesRef = db.collection("gamesCollection");
+		const data = await gamesRef.get();
+		const resultData = [];
+		data.forEach(item => {
+			resultData.push({
+				gameId: item.id,
+				gameData: item.data()
+			});
+		});
+
+		return resultData;
+	}
+
+	async newReservedGame(data: {userId: string, targetGameName: string, targetGameIndex: number}) {
+		const db = getFirestore();
+
+		// 체크
+
+
+		// 예약
+		const gamesRef = db.collection("gamesCollection").doc(data.targetGameName);
+		gamesRef.update({
+			[data.targetGameIndex]: {startTime: new Date(), userId: data.userId}
+		}).then(() => "성공")
+			.catch(err => err);
 	}
 }

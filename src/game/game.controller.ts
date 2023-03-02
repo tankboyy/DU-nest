@@ -31,7 +31,7 @@ export class GameController {
   }
 
   @Post("/test1")
-  async test(@Body() testData: {}) {
+  async test(@Body() testData: {email: string, password: string}) {
     return await this.gameService.test(testData).then(data => data)
   }
 
