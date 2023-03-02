@@ -14,6 +14,7 @@ import { initializeApp, ServiceAccount } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { credential, firestore, auth } from "firebase-admin";
 import { Timestamp } from "firebase/firestore";
+import { gameType } from "./gameTypes";
 
 
 @Injectable()
@@ -62,18 +63,18 @@ export class GameService {
 		// gamesCollection 기본 설정값
 		const gameList = ["축구", "포켓볼", "탁구", "플스", "스위치", "오락기", "컴퓨터", "충전", "노래방"];
 		//
-		// // const db = getFirestore();
-		// const ref = db.collection("gamesCollection");
-		// gameList.forEach(game => {
-		// 	ref.doc(game).set({
-		// 				0: {startTime: new Date(), userId: ""},
-		// 				1: {startTime: new Date(), userId: ""},
-		// 				2: {startTime: new Date(), userId: ""},
-		// 				3: {startTime: new Date(), userId: ""},
-		// 				4: {startTime: new Date(), userId: ""},
-		// 				5: {startTime: new Date(), userId: ""}
-		// 			});
-		//});
+		// const db = getFirestore();
+		const ref = db.collection("gamesCollection");
+		gameList.forEach(game => {
+			ref.doc(game).set({
+				0: {startTime: String(new Date()), userId: ""},
+				1: {startTime: String(new Date()), userId: ""},
+				2: {startTime: String(new Date()), userId: ""},
+				3: {startTime: String(new Date()), userId: ""},
+				4: {startTime: String(new Date()), userId: ""},
+				5: {startTime: String(new Date()), userId: ""}
+			});
+		});
 
 
 		// 체크
@@ -90,22 +91,22 @@ export class GameService {
 		// 	.catch(err => console.log(err));
 		//
 		// return "성공";
-		const gamesRef = db.collection("gamesCollection");
-		const data = await gamesRef.get();
-		const resultData = [];
-		data.forEach(item => {
-			console.log(item.data())
-			// console.log(typeof item.data()[0].startTime.toDate().toLocaleString("ko-KR", {
-			// 	timeZone:
-			// 		"Asia/Seoul"
-			// }));
-			resultData.push({
-				gameId: item.id,
-				gameData: item.data()
-			});
-		});
-
-		return resultData;
+		// const gamesRef = db.collection("gamesCollection");
+		// const data = await gamesRef.get();
+		// const resultData = [];
+		// data.forEach(item => {
+		// 	console.log(item.data())
+		// 	// console.log(typeof item.data()[0].startTime.toDate().toLocaleString("ko-KR", {
+		// 	// 	timeZone:
+		// 	// 		"Asia/Seoul"
+		// 	// }));
+		// 	resultData.push({
+		// 		gameId: item.id,
+		// 		gameData: item.data()
+		// 	});
+		// });
+		//
+		// return resultData;
 
 
 	}
@@ -262,7 +263,7 @@ export class GameService {
 		const db = getFirestore();
 		const gamesRef = db.collection("gamesCollection");
 		const data = await gamesRef.get();
-		const resultData = [];
+		const resultData: gameType[] = [];
 		data.forEach(item => {
 			resultData.push({
 				gameId: item.id,
