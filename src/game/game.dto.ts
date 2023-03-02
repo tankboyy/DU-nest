@@ -144,3 +144,15 @@ export class inputGameDto {
   @Field(() => String)
   startTime: string;
 }
+
+
+export class newReservedDataDto {
+  @IsString()
+  readonly userId: string;
+
+  @IsString()
+  readonly targetGameName: string;
+
+  @IsNumber()
+  readonly targetGameIndex: number;
+}

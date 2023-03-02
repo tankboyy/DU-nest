@@ -6,7 +6,7 @@ import { UsersResolver } from "../users/users.resolver";
 import {
 	cancelType,
 	gamesType,
-	multiGameDataType,
+	multiGameDataType, newReservedDataDto,
 	reservedDataType,
 	TgameData
 } from "./game.dto";
@@ -27,23 +27,17 @@ export class GameService {
 
 
 	async getGames() {
-		const gamesRef = doc(this.fb.db, "game", "gamesState");
-		const snapshots = await getDoc(gamesRef);
-		const gamesData = snapshots.data();
-		let newData: TgameData[] = [];
-		Object.entries(gamesData).forEach(([key, value]) => {
-			value.users.map((item, i) => {
-				if (!item.startTime) return;
-				const endTime = new Date(item.startTime);
-				endTime.setMinutes(endTime.getMinutes() + 40);
-				if (endTime < new Date()) {
-					value.users[i] = {userId: "", startTime: ""};
-				}
+		const db = getFirestore();
+		const gamesRef = db.collection("gamesCollection");
+		const data = await gamesRef.get();
+		const resultData = [];
+		data.forEach(item => {
+			resultData.push({
+				gameId: item.id,
+				gameData: item.data()
 			});
-			const newValue = {id: key, users: [...value.users]};
-			newData.push(newValue);
 		});
-		return newData;
+		return resultData;
 	}
 
 
@@ -100,12 +94,19 @@ export class GameService {
 		const data = await gamesRef.get();
 		const resultData = [];
 		data.forEach(item => {
+			console.log(item.data())
+			// console.log(typeof item.data()[0].startTime.toDate().toLocaleString("ko-KR", {
+			// 	timeZone:
+			// 		"Asia/Seoul"
+			// }));
 			resultData.push({
 				gameId: item.id,
 				gameData: item.data()
 			});
 		});
+
 		return resultData;
+
 
 	}
 
@@ -272,7 +273,7 @@ export class GameService {
 		return resultData;
 	}
 
-	async newReservedGame(data: {userId: string, targetGameName: string, targetGameIndex: number}) {
+	async newReservedGame(data: newReservedDataDto) {
 		const db = getFirestore();
 
 		// 체크
@@ -281,8 +282,11 @@ export class GameService {
 		// 예약
 		const gamesRef = db.collection("gamesCollection").doc(data.targetGameName);
 		gamesRef.update({
-			[data.targetGameIndex]: {startTime: new Date(), userId: data.userId}
-		}).then(() => "성공")
+			[data.targetGameIndex]: {startTime: String(new Date()), userId: data.userId}
+		}).then(() => {
+			return "성공";
+		})
 			.catch(err => err);
+		return "성공";
 	}
 }
