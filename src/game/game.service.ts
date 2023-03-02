@@ -282,8 +282,9 @@ export class GameService {
 
 		// 예약
 		const gamesRef = db.collection("gamesCollection").doc(data.targetGameName);
+		const startTime = new Date().setTime(new Date().getTime() + (9 * 60 * 60 * 1000));
 		gamesRef.update({
-			[data.targetGameIndex]: {startTime: String(new Date()), userId: data.userId}
+			[data.targetGameIndex]: {startTime: String(startTime), userId: data.userId}
 		}).then(() => {
 			return "성공";
 		})
