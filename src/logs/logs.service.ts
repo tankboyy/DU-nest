@@ -180,6 +180,10 @@ export class LogsService {
 
     if (await this.checkedLog(inputAddData)) return '중복';
 
+    const logsDoc = doc(this.fb.db, 'logs', 'gameLog2');
+    const snapshot = await getDoc(logsDoc);
+    const logsData = snapshot.data().logs;
+
     const db = getFirestore();
     const logRef = db.collection('logsCollection');
     let addData = {};
@@ -193,9 +197,21 @@ export class LogsService {
             timestamp: new Date(),
             userGender: user.userGender,
           };
+          const addData2 = {
+            userName: user.userName,
+            gameName: inputAddData.gameName,
+            userId: inputAddData.userId,
+            currentTime: String(new Date()),
+            userGender: user.userGender,
+          };
+          logsData.push(addData2);
         }
       });
-      if (Object.values(addData).length !== 0) await logRef.add(addData);
+      // if (Object.values(addData).length !== 0) await logRef.add(addData);
+      // await Promise.all([
+      logRef.add(addData);
+      setDoc(logsDoc, { logs: logsData });
+      // ]);
     });
 
     return '성공';
