@@ -1,8 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsString } from "class-validator";
-
-
-
+import { IsString } from 'class-validator';
 
 @ObjectType()
 export class logDto {
@@ -31,7 +28,7 @@ export class logDto2 {
     userId: string;
     userGender: string;
     currentTime: string;
-  }
+  };
 
   @Field(() => logDto)
   todayLog: {
@@ -40,7 +37,7 @@ export class logDto2 {
     userId: string;
     userGender: string;
     currentTime: string;
-  }
+  };
 }
 
 @InputType()
@@ -63,11 +60,12 @@ export class inputAddLogDot {
 
 @InputType()
 export class inputAddData {
-  @Field(() => String)
-  gameName: string
+  gameName: string;
 
-  @Field(() => String)
-  userId: string
+  userId: string;
+}
 
-
+export class checkedLogDataDto {
+  readonly gameName: string;
+  readonly userId: string;
 }
